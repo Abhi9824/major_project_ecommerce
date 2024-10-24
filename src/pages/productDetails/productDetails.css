@@ -1,0 +1,70 @@
+:root {
+    --primary-color: rgb(18, 77, 70);
+    --secondary-color: rgb(255, 255, 255);
+
+    font-family: "Montserrat", sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.bodyDiv {
+    position: relative;
+    top: 100px;
+    padding: 0rem 1rem;
+    overflow-y: auto;
+    height: 100vh;
+    background: var(--secondary-color);
+}
+
+.detailsDiv {
+    min-height: 100vh;
+    padding: 0rem 1rem; /* Removed positioning */
+}
+.description{
+    display: flex;
+    flex-wrap: wrap;
+}
+.half-width{
+    width: 40%;
+}
+
+.loadingDiv{
+display: flex;
+justify-content: center;
+align-items: center;
+
+}
+.wishlishtDiv{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.wishlistBtn{
+    position: relative;
+    width: 50%;
+}
+
+.addTobagBtn{
+    background-color: black;
+    color: white;
+    width: 100%;
+    padding:0.5rem;
+    border-radius:5px
+}
+
+.wishlishtDiv {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem; /* Optional: Add some space between the elements */
+  }
+  
+  .sizeSelect, .wishlistBtn {
+    flex-grow: 1; /* Allows each to take up available space */
+  }
+  
+  .wishlistBtn button {
+    width: 100%; /* Ensure the button takes up full width within its container */
+  }
+  
