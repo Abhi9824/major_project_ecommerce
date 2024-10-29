@@ -30,6 +30,7 @@ const Filter = () => {
  
   const ratingHandler=(e)=>{
     const {value}=e.target;
+    console.log(value)
     dispatch(filterRating(value))
   }
 
@@ -42,6 +43,19 @@ const Filter = () => {
     dispatch(resetFilters());
   };
 
+
+  const filterCategoryhandler=(e)=>{
+   const {value}=e.target;
+
+   let updatedCategory;
+   if(filterCategory.includes(value)){
+    updatedCategory=filterCategory.filter((g)=>g!==value)
+   }else{
+    updatedCategory=[...filterCategory,value]
+   }
+dispatch(filterByCategory(updatedCategory))
+
+  }
   
 
   return (
@@ -94,6 +108,51 @@ const Filter = () => {
             checked={gender.includes("Unisex")}
             onChange={genderHandler}
           /> Unisex<br />
+        </div>
+
+        <div className='filterCategory py-3'>
+          <label htmlFor="filterCategory" className="fw-bolder">Category:</label><br />
+          <input
+            type="checkbox"
+            value="Sneaker"
+            name="filterCategory"
+            checked={filterCategory.includes("Sneaker")}
+            onChange={filterCategoryhandler}
+          /> Sneaker<br />
+
+          <input
+            type="checkbox"
+            value="Running"
+            name="filterCategory"
+            checked={filterCategory.includes("Running")}
+            onChange={filterCategoryhandler}
+          /> Running<br />
+
+
+<input
+            type="checkbox"
+            value="Luxury"
+            name="filterCategory"
+            checked={filterCategory.includes("Luxury")}
+            onChange={filterCategoryhandler}
+          /> Luxury<br />
+
+
+<input
+            type="checkbox"
+            value="Casual"
+            name="filterCategory"
+            checked={filterCategory.includes("Casual")}
+            onChange={filterCategoryhandler}
+          /> Casual<br />
+
+          <input
+            type="checkbox"
+            value="StreetWear"
+            name="filterCategory"
+            checked={filterCategory.includes("StreetWear")}
+            onChange={filterCategoryhandler}
+          /> StreetWear<br />
         </div>
 
         <div className='rating py-3'>

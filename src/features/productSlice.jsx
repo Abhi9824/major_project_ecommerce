@@ -17,9 +17,9 @@ export const fetchProducts = createAsyncThunk(
   }
 );
 
-export const genderCategoryProducts=createAsyncThunk("gender/genderCategoryProducts", async(genderCategory)=>{
+export const genderCategoryProducts=createAsyncThunk("products/genderCategoryProducts", async(categoryGender)=>{
   try{
-    const response=await axios.get(`http://localhost:3000/products/${genderCategory}`)
+    const response=await axios.get(`http://localhost:3000/products/category/${categoryGender}`)
     if(response.status===200){
       return response.data
     }else{
@@ -31,63 +31,69 @@ export const genderCategoryProducts=createAsyncThunk("gender/genderCategoryProdu
   }
 })
 
+//helper function
+const applyFilters=(state)=>{
+  let updatedProducts=[...state.products];
+
+    // Filter by category if it's not "All"
+    if (state.filterCategory.length > 0) {
+      updatedProducts = updatedProducts.filter((prod) =>
+        state.filterCategory.some((cat) => prod.category.includes(cat))
+      );
+    }
+
+   //filter by gender
+   if(state.gender.length>0){
+    updatedProducts=updatedProducts.filter((prod)=>state.gender.some((g)=>prod.gender.includes(g)))
+    console.log("gender",updatedProducts)
+   }
+
+    // Filter by rating if one is selected
+  if (state.rating) {
+    const ratingThreshold = parseInt(state.rating, 10);
+    updatedProducts = updatedProducts.filter(
+      (prod) => prod.rating >= ratingThreshold
+    );
+  }
+
+  // Filter by price range
+  updatedProducts = updatedProducts.filter(
+    (prod) => prod.price <= state.price
+  );
+
+  // Sort products if a sort method is selected
+  if (state.sortBy === "asc") {
+    updatedProducts = updatedProducts.sort((a, b) => a.price - b.price);
+  } else if (state.sortBy === "des") {
+    updatedProducts = updatedProducts.sort((a, b) => b.price - a.price);
+  }
+
+
+
+  console.log("Updated Products After Filter: ", updatedProducts);
+   return updatedProducts
+}
+
+
+
 const productSlice = createSlice({
   name: "products",
   initialState: {
     products: [],
     status: "idle",
     error: null,
-    filterCategory: "All",
+    filterCategory: [],
     price: 80000,
     sortBy: "price",
     wishlist:false,
     rating: "",
-    gender: "All", // Changed to an array to store multiple selected gender options
+    gender: [], // Changed to an array to store multiple selected gender options
+  
     filteredProducts: [],
     wishlistProducts:[]
   },
+
   reducers: {
-
-    applyFilters:(state)=>{
-      let updatedProducts=[...state.products];
-
-        // Filter by category if it's not "All"
-       if(state.filterCategory!=="All"){
-        updatedProducts=updatedProducts.filter((prod)=>prod.category===state.filterCategory)
-       }
-
-       //filter by gender
-       if(state.gender.length>0){
-        updatedProducts=updatedProducts.filter((prod)=>state.gender.some((g)=>prod.gender.includes(g)))
-       }
-
-        // Filter by rating if one is selected
-      if (state.rating) {
-        const ratingThreshold = parseInt(state.rating, 10);
-        updatedProducts = updatedProducts.filter(
-          (prod) => prod.rating >= ratingThreshold
-        );
-      }
-
-      // Filter by price range
-      updatedProducts = updatedProducts.filter(
-        (prod) => prod.price <= state.price
-      );
-
-      // Sort products if a sort method is selected
-      if (state.sortBy === "asc") {
-        updatedProducts = updatedProducts.sort((a, b) => a.price - b.price);
-      } else if (state.sortBy === "des") {
-        updatedProducts = updatedProducts.sort((a, b) => b.price - a.price);
-      }
-
-
-
-       return updatedProducts
-    },
-
-
-
     filterByCategory: (state, action) => {  
       state.filterCategory = action.payload;
       // state.applyFilters(state)
@@ -97,22 +103,13 @@ const productSlice = createSlice({
     },
     filterByGender: (state, action) => {
       state.gender = action.payload;
-    
-    
-      // if (state.gender.length === 0) {
-      //   state.filteredProducts = state.products;
-      // } else {
-   
-      //   state.filteredProducts = state.products.filter((prod) =>
-      //     state.gender.some((g) => prod.gender.includes(g))
-      //   );
-      // }
+      
       state.filteredProducts = applyFilters(state);
     },
-    
-      
+     
     filterRating: (state, action) => {
       state.rating = action.payload;
+      console.log(action.payload)
       // const ratingThreshold = parseInt(action.payload, 10);
 
       // state.filteredProducts = state.filteredProducts.filter(
@@ -167,7 +164,7 @@ const productSlice = createSlice({
     
     resetFilters: (state) => {
         // Reset all filters to their initial values
-        state.filterCategory = "All";
+        state.filterCategory = [];
         state.price = 80000;
         state.sortBy = "price";
         state.rating = "";
@@ -177,9 +174,8 @@ const productSlice = createSlice({
       },
     
   },
-  extraReducers: (builder) => {
-    builder
-      .addCase(fetchProducts.pending, (state) => {
+extraReducers:(builder) => {
+    builder.addCase(fetchProducts.pending, (state) => {
         state.status = "loading";
       })
       .addCase(fetchProducts.fulfilled, (state, action) => {
@@ -200,7 +196,14 @@ const productSlice = createSlice({
       })
       .addCase(genderCategoryProducts.fulfilled, (state, action)=>{
         state.status='success'
-        state.filteredProducts = action.payload; // Initialize filteredProducts with all products
+
+        console.log("Fetched gender category products: ", action.payload);
+        state.filteredProducts = action.payload;
+        console.log("Fetched gender filtered products: ", state.filteredProducts);
+        // const filteredByGender = action.payload.filter(prod => prod.gender.includes(state.gender[0])); // Assuming state.gender[0] contains the selected gender
+        // console.log("Filtered products after fetching by gender: ", filteredByGender);
+        // state.filteredProducts = filteredByGender.length > 0 ? filteredByGender : action.payload; 
+        
 
       })
       .addCase(genderCategoryProducts.rejected, (state, action) => {
@@ -216,6 +219,6 @@ export const {
   filterByGender,
   filterRating,
   sortByPrice,
-  applyFilters,
+  
   priceFilter,resetFilters,toggleWishlist
 } = productSlice.actions;

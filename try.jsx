@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchCartProducts, removeFromCart, setSelectedSize, updateCartItem } from '../../features/cartSlice';
-import { toggleWishlist } from '../../features/productSlice';
 import Navbar from '../../components/Navbar/Navbar';
 import { Link } from 'react-router-dom';
 import "./cart.css";
@@ -34,19 +33,10 @@ const Cart = () => {
   };
 
   const handleRemoveItem = (id) => {
-    dispatch(removeFromCart(id)).then(() => {
-      dispatch(fetchCartProducts());
-    });
+    dispatch(removeFromCart(id));
+    dispatch(fetchCartProducts());
   };
-  
 
-  const handleWishlistClick = (product) => {
-    dispatch(removeFromCart(product.productId._id))
-      .then(() => dispatch(toggleWishlist(product.productId._id)))
-      .then(() => dispatch(fetchCartProducts()));
-  };
-  
-  
   // Calculate subtotal, discount, tax, and grand total
   const subtotal = cartProducts.reduce((acc, product) => acc + product.productId.price * product.quantity, 0);
   const discount = subtotal > 30000 ? 0.1 * subtotal : 0;
@@ -59,35 +49,37 @@ const Cart = () => {
       <Navbar />
       <div className="container mt-5">
         <h3 className="fw-bolder heading">SHOPPING CART</h3>
-        <div className="row ">
-        {cartStatus === 'loading' && <p>Loading Cart...</p>}
+        <div className="row">
+          {cartStatus === 'loading' && <p>Loading Cart...</p>}
           {cartError && <p>{cartError}</p>}
-
-        {/* Left column */}
-        <div className='col-md-8'>
-          
           {cartProducts?.length === 0 ? (
             <p>No items in cart</p>
           ) : (
-            cartProducts.map((product)=>{
-              return(
-             
-             <div className="card mb-4 p-3" key={product._id}>
-             <div className="row g-0">
-              <div className='col-md-4'>
-              <Link to={`/productDetails/${product.productId._id}`}>
-              <img src={product.productId.images[0]} alt={product.productId.title} 
-
-              className="img-fluid"
-              style={{ objectFit: 'cover', height: '100%' }}
-              />
-</Link> </div>
-
-<div className='col-md-4 mx-3'>
-  <div className="card-body d-flex flex-column align-items-start">
-    <h5 className="card-title">{product.productId.title}</h5>
-    <p className="card-text">Price: ${product.productId.price.toFixed(2)}</p>
-    <p className="mb-1">Size: 
+            <div className="row py-4">
+              {cartProducts.map((product) => {
+                const productSubtotal = product.productId.price * product.quantity;
+                return (
+                  <div className="col-md-6 mb-4" key={product.productId._id}>
+                    <div className="card h-100">
+                      <div className="row g-0">
+                        <div className="col-4">
+                          <Link to={`/productDetails/${product.productId._id}`}>
+                            <img
+                              src={product.productId.images[0]}
+                              alt={product.productId.title}
+                              className="img-fluid rounded-start"
+                              style={{ objectFit: 'cover', height: '100%' }}
+                            />
+                          </Link>
+                        </div>
+                        <div className="col-6  mx-4 d-flex flex-column justify-content-between p-3">
+                          <div>
+                            <p className="fw-bold mb-1">{product.productId.brand}</p>
+                            <p className="mb-1">{product.productId.title}</p>
+                            <h5 className="fw-bold">${product.productId.price}</h5>
+                          </div>
+                          <div>
+                            <p className="mb-1">Size: 
                               <select 
                                 className="form-select form-select-sm d-inline w-auto ms-2"
                                 onChange={(e) => handleSizeChange(product.productId._id, e.target.value)}
@@ -98,47 +90,29 @@ const Cart = () => {
                                 ))}
                               </select>
                             </p>
-    {/* <p className="card-text">Quantity: {product.quantity}</p> */}
-    
-    <p className="mb-2">
+                            <p className="mb-2">
                               Quantity: 
                               <button className="btn btn-light btn-sm mx-2" onClick={() => handleDecreaseQuantity(product)}>-</button>
                               <span>{product.quantity}</span>
                               <button className="btn btn-light btn-sm mx-2" onClick={() => handleIncreaseQuantity(product)}>+</button>
                             </p>
-                            <button
-                            className="btn btn-secondary btn-sm mt-2"
-                            onClick={() => handleRemoveItem(product.productId._id)}
-                          >
-                            Remove From Cart
-                          </button>
-
+                          </div>
                           <button
                             className="btn btn-danger btn-sm mt-2"
-                            onClick={() => handleWishlistClick(product)}
+                            onClick={() => handleRemoveItem(product.productId._id)}
                           >
-                            Add to Wishlist
+                            Remove
                           </button>
-  </div>
-</div>
-
-
-</div></div>
-                        )            })
-
-
-
-
-
-
-          )
-          }
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
           
-          
-        </div>
-
-        {/* price details */}
-        <div className="col-md-4">
+          <div className="col-md-4">
             <div className="card p-3">
               <h5>Price Details</h5>
               <p>Subtotal: ${subtotal.toFixed(2)}</p>
@@ -149,13 +123,9 @@ const Cart = () => {
               <button className="btn btn-primary mt-3 w-100">Place Order</button>
             </div>
           </div>
-
-
-
-
-
+        </div>
       </div>
-    </div></div>
+    </div>
   );
 };
 

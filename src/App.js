@@ -16,7 +16,7 @@ function App() {
       <Routes>
         <Route path="/" element={<ProductsView/>}/>
         <Route path="/productList" element={<ProductList/>}/>
-        <Route path="/productList/:categoryGender" element={<ProductList />}/>
+        <Route path="/productList/category/:categoryGender" element={<ProductList />}/>
         <Route path="/productDetails/:productId" element={<ProductDetails />}/>
         <Route path="/wishlist" element={<Wishlist />}/>
         <Route path="/cart" element={<Cart />}/>

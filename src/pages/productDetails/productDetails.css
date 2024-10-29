@@ -6,9 +6,12 @@
     margin: 0;
     padding: 0;
 }
+.main{
+    position:relative;
+}
 
 .bodyDiv {
-    position: relative;
+    position: absolute;
     top: 100px;
     padding: 0rem 1rem;
     overflow-y: auto;

@@ -6,20 +6,28 @@ import Filter from '../../components/SidebarFilter/Filter';
 import "./product.css";
 import { Link } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
+import { genderCategoryProducts } from '../../features/productSlice';
+
 
 const ProductList = () => {
   const dispatch = useDispatch();
-  const { products, status, error, filteredProducts } = useSelector((state) => state.products);
-  console.log(products);
+  const {categoryGender}=useParams()
+  const { products, status, error, filteredProducts} = useSelector((state) => state.products);
+  // console.log(products);
 
   
 
-  useEffect(() => {
+  // ProductList.js
+useEffect(() => {
+  if (categoryGender) {
+    
+    dispatch(genderCategoryProducts(categoryGender));
+  } else {
     dispatch(fetchProducts());
-    
-    },[]
-  )
-    
+  }
+ 
+  console.log("categoryGender:", categoryGender);
+}, [categoryGender,dispatch]);
 
   return (
     <>
@@ -50,8 +58,10 @@ const ProductList = () => {
                     <div className='card-body cardBody'>
                       <h5 className='card-title'>{prod.brand}</h5>
                     <p className='card-text fw-bold productTitle'>{prod.title}</p>
-                      <p className='card-text'>${prod.price}</p>
+                      <p className='card-text fs-5 fw-bold'>${prod.price}</p>
                       <p className='card-text'>${prod.gender}</p>
+                      <p className='card-text'>${prod.category}</p>
+
 
                       {/* <p className='card-text'>{prod.rating}</p> */}
 
