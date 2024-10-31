@@ -64,7 +64,7 @@ const relatedProducts = productData
   return (<>
     <div className='main'>
       <Navbar />
-      <div className='row py-2 bodyDiv'>
+      <div className='row py-2 '>
         {status === "Loading" && 
           (<div className="spinner-border text-success loadingDiv" role="status">
             <span className="visually-hidden">Loading...</span>
@@ -102,7 +102,7 @@ const relatedProducts = productData
               </div>
               <div className='wishlistBtn flex-grow-1 ms-2'>
                 <button
-                  className={`btn w-100 ${productData.isWishlist ? 'btn-danger' : 'btn-secondary'}`}
+                  className={`btn w-100 ${productData.isWishlist ? 'btn-danger' : 'secondary'}`}
                   onClick={handleWishlistClick}
                 >
                   {productData.isWishlist ? 'Remove from Wishlist' : 'Add to Wishlist'}

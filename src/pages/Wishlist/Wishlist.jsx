@@ -16,6 +16,12 @@ const Wishlist = () => {
   useEffect(() => {
     // dispatch(toggleWishlist());
   }, []);
+
+  const addToCartHandler=()=>{
+    // const product=
+    dispatch(addToCartHandler())
+
+  }
   
   return (
     <div>
@@ -48,6 +54,8 @@ const Wishlist = () => {
                       >
                         {product.isWishlist ? "Remove from Wishlist" : "Add to Wishlist"}
                       </button>
+
+                      <button className='addTobagBtn' onClick={() => addToCartHandler(product._id)}>Add to Bag</button>
                       
                     </div>
                   </div>

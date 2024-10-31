@@ -3,6 +3,7 @@ import "./navbar.css";
 import { Link } from 'react-router-dom';
 import { MdAllInclusive } from "react-icons/md";
 import { AiOutlineShoppingCart, AiOutlineHeart } from 'react-icons/ai';
+import { IoPersonCircleSharp } from "react-icons/io5";
 
 const Navbar = () => {
   return (
@@ -12,8 +13,8 @@ const Navbar = () => {
           
           {/* Brand Section */}
           <div className="brand-icon">
-            <Link to="/" className='nav-brand'>Alcroz</Link>
-            <MdAllInclusive style={{ width: "20px", height: "25px" }} />
+            <Link to="/" className='nav-brand fs-4'>Alcroz</Link>
+            <MdAllInclusive style={{ width: "25px", height: "30px", padding:"0px"}} />
           </div>
 
           {/* Toggle Button */}
@@ -28,7 +29,7 @@ const Navbar = () => {
           <div className="d-flex justify-content-between w-100"> {/* Added w-100 to stretch it */}
             
             {/* Navigation Links */}
-            <ul className='nav-pills mb-0'>
+            <ul className='nav-pills mb-0 mx-4'>
             <li className="nav-item">
                 <Link to="/productList" className='link'>All Products</Link>
               </li>
@@ -53,6 +54,11 @@ const Navbar = () => {
             <Link to={`/cart`}>  <button className="btn icon-button" aria-label="Cart">
                 <AiOutlineShoppingCart />
               </button>
+              </Link>
+
+              <Link to={`/profile`}>
+              <button className='btn icon-button' aria-label="profile">
+              <IoPersonCircleSharp /></button>
               </Link>
             </div>
           

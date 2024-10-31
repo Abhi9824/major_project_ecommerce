@@ -48,7 +48,7 @@ const Cart = () => {
   
   
   // Calculate subtotal, discount, tax, and grand total
-  const subtotal = cartProducts.reduce((acc, product) => acc + product.productId.price * product.quantity, 0);
+  const subtotal = cartProducts?.length ? cartProducts?.reduce((acc, product) => acc + product.productId.price * product.quantity, 0):0;
   const discount = subtotal > 30000 ? 0.1 * subtotal : 0;
   const tax = 0.05 * (subtotal - discount);
   const shipping = subtotal > 50000 ? 0 : 100;
@@ -64,7 +64,7 @@ const Cart = () => {
           {cartError && <p>{cartError}</p>}
 
         {/* Left column */}
-        <div className='col-md-8'>
+        <div className='col-md-6'>
           
           {cartProducts?.length === 0 ? (
             <p>No items in cart</p>
@@ -72,8 +72,8 @@ const Cart = () => {
             cartProducts.map((product)=>{
               return(
              
-             <div className="card mb-4 p-3" key={product._id}>
-             <div className="row g-0">
+             <div className="card cart-card mb-4 p-3" key={product._id}>
+             <div className="row-card g-0">
               <div className='col-md-4'>
               <Link to={`/productDetails/${product.productId._id}`}>
               <img src={product.productId.images[0]} alt={product.productId.title} 
@@ -85,7 +85,7 @@ const Cart = () => {
 
 <div className='col-md-4 mx-3'>
   <div className="card-body d-flex flex-column align-items-start">
-    <h5 className="card-title">{product.productId.title}</h5>
+    <h5 className="card-title fw-bold">{product.productId.title}</h5>
     <p className="card-text">Price: ${product.productId.price.toFixed(2)}</p>
     <p className="mb-1">Size: 
                               <select 
@@ -100,24 +100,24 @@ const Cart = () => {
                             </p>
     {/* <p className="card-text">Quantity: {product.quantity}</p> */}
     
-    <p className="mb-2">
+    <p className="mb-2 py-2">
                               Quantity: 
                               <button className="btn btn-light btn-sm mx-2" onClick={() => handleDecreaseQuantity(product)}>-</button>
                               <span>{product.quantity}</span>
                               <button className="btn btn-light btn-sm mx-2" onClick={() => handleIncreaseQuantity(product)}>+</button>
                             </p>
                             <button
-                            className="btn btn-secondary btn-sm mt-2"
+                            className="btn btn-danger btn-sm mt-2"
                             onClick={() => handleRemoveItem(product.productId._id)}
                           >
                             Remove From Cart
                           </button>
 
                           <button
-                            className="btn btn-danger btn-sm mt-2"
+                            className="btn danger btn-sm mt-2"
                             onClick={() => handleWishlistClick(product)}
                           >
-                            Add to Wishlist
+                            Move to Wishlist
                           </button>
   </div>
 </div>
@@ -137,25 +137,33 @@ const Cart = () => {
           
         </div>
 
-        {/* price details */}
-        <div className="col-md-4">
-            <div className="card p-3">
-              <h5>Price Details</h5>
-              <p>Subtotal: ${subtotal.toFixed(2)}</p>
-              <p>Discount: ${discount.toFixed(2)}</p>
-              <p>Tax: ${tax.toFixed(2)}</p>
-              <p>Shipping Charges: ${shipping.toFixed(2)}</p>
-              <h5>Grand Total: ${grandTotal.toFixed(2)}</h5>
-              <button className="btn btn-primary mt-3 w-100">Place Order</button>
-            </div>
-          </div>
 
+ {/* price details */}
+ <div className="col-md-4">
+            <div className="card priceCard px-3 d-flex">
+                <h5 className='fw-bold'>PRICE DETAILS</h5>
+                <hr className='mt-0'/>
+                <p>Price({cartProducts.length} Item): <span className='float-end'>${subtotal.toFixed(2)}</span></p>
+                <p>Discount: <span className='float-end'>${discount.toFixed(2)}</span></p>
+                <p>Tax: <span className='float-end'>${tax.toFixed(2)}</span></p>
+                <p>Shipping Charges: <span $ className='float-end'>${shipping.toFixed(2)}</span></p>
+                <hr />
+                <h5 className='fw-bold'>Grand Total: <span className='float-end'>${grandTotal.toFixed(2)}</span></h5><hr/>
+                <p>You will save ${discount.toFixed(0)} on this order.</p>
+                <Link to={`/checkout`}>
+                    <button className="btn checkoutBtn mt-3 w-100">Checkout</button>
+                </Link>
+            </div>
+        </div>
+       
 
 
 
 
       </div>
-    </div></div>
+    </div>
+    
+    </div>
   );
 };
 
