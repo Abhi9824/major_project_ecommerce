@@ -3,8 +3,9 @@ import { Link } from 'react-router-dom';
 
 const RelatedProducts = ({ relatedProducts }) => {
   return (
-    <div className="related-products py-4">
-      <h4>Related Products</h4>
+    <div className="related-products py-1 ">
+       <h3>Similar Products</h3>
+       {/* <p>Here are some related products you might like.</p> */}
       <div className="row">
         {relatedProducts.map((prod) => (
           <div className="col-md-4" key={prod._id}>

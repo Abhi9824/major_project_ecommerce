@@ -142,6 +142,7 @@ const cartSlice = createSlice({
         console.log("Updated Product",updatedProduct)
         if (updatedProduct) {
           updatedProduct.quantity = action.payload.quantity;
+          updatedProduct.selectedSize = action.payload.selectedSize;
         }
       })
       .addCase(updateCartItem.rejected, (state, action) => {

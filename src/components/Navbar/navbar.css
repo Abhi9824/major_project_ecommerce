@@ -106,3 +106,14 @@ body {
         gap: 0.5rem;
     }
 }
+
+.searchBtn{
+    background: var(--primary-color);
+    border: 1px solid  white;
+    color: white;
+}
+.searchBtn:hover{
+    background: var(--primary-color);
+    border: 1px solid  white;
+    color: white;
+}

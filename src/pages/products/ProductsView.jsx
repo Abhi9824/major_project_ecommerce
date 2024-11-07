@@ -2,30 +2,38 @@
 
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchProducts } from '../../features/productSlice';
+import { fetchProducts, filterByBrand } from '../../features/productSlice';
 import Navbar from '../../components/Navbar/Navbar';
 import Caurousels from '../../components/productCarousels/Caurousels';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
+import "./ProductView.css"
+import Footer from '../../components/Footer/Footer';
+import Loading from '../../components/Loading/Loading';
+
 
 const ProductsView = () => {
     const dispatch = useDispatch();
-    const { products, status, error } = useSelector((state) => state.products);
+    // const {brand}=useParams()
+    const { products, status, error,filteredProducts,brand } = useSelector((state) => state.products);
 
     useEffect(() => {
+        if(brand){
+dispatch(filterByBrand(brand))
+        }else{
         dispatch(fetchProducts());
-    }, [dispatch]);
+    }}, [brand]);
 
     // Find the first men's and women's shoes when products are loaded
     const firstMensShoe = status === "success" ? products.find((product) => product.gender.includes('Mens')) : null;
     const firstWomensShoe = status === "success" ? products.find((product) => product.gender.includes('Womens')) : null;
 
-    return (
+    return (<>
         <div className='mainDiv'>
-            <div className='main'>
+           
                 <Navbar />
-            </div>
+           
             
-            {status === "Loading" && <p>Loading Products....</p>}
+            {status === "loading" && <Loading/>}
             {error && <p>{error}</p>}
             
             {/* Carousel Section */}
@@ -34,7 +42,7 @@ const ProductsView = () => {
             </div>
             
             {/* Row for Men's and Women's Products */}
-            <div className='row productRow mt-4 py-4'>
+            <div className='row productRow mt-4 py-2'>
                 {firstMensShoe && (
                     <Link to={`/productList/category/Mens`} className='col-md-6 d-flex justify-content-around align-items-center text-decoration-none text-dark mb-3' style={{ backgroundColor: "#f5f5f5", borderRadius: "5px" }}>
                         <div>
@@ -60,7 +68,15 @@ const ProductsView = () => {
                     </Link>
                 )}
             </div>
+           
+
+            <Footer/>
+
+           
         </div>
+       
+        </>
+
     );
 };
 

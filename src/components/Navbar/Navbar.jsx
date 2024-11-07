@@ -4,8 +4,28 @@ import { Link } from 'react-router-dom';
 import { MdAllInclusive } from "react-icons/md";
 import { AiOutlineShoppingCart, AiOutlineHeart } from 'react-icons/ai';
 import { IoPersonCircleSharp } from "react-icons/io5";
+// import { brandProduct } from '../../features/productSlice';
+import { fetchProducts, filterByBrand } from '../../features/productSlice';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 
 const Navbar = () => {
+  const [searchTerm, setSearchTerm] = useState('');
+  const navigate = useNavigate();
+  const dispatch=useDispatch()
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    if (searchTerm.length>0) {
+      dispatch(filterByBrand(searchTerm));
+      navigate(`/productList/brand/${searchTerm}`);
+    }else{
+      
+      dispatch(fetchProducts())
+      navigate(`/productList`);
+    }
+  };
   return (
     <header>
       <nav className='navbar navbar-expand-lg navigation'>
@@ -47,7 +67,16 @@ const Navbar = () => {
 
             {/* Search Bar */}
             <div className="search-bar d-flex align-items-center">
-              <input type="text" className="form-control search-input me-2" placeholder="Search by Brands... " />
+            <form onSubmit={handleSearch} className="d-flex align-items-center">
+                  <input
+                    type="text"
+                    className="form-control search-input me-2"
+                    placeholder="Search by Brands..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                  />
+                  <button type="submit" className="btn searchBtn">Search</button>
+                </form>
               <Link to={`/wishlist`} className="btn icon-button" aria-label="Wishlist">
                 <AiOutlineHeart />
               </Link>

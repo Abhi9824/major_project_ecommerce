@@ -3,11 +3,12 @@ import { useDispatch } from "react-redux";
 import { addAddress, fetchAllAddress, updateAddress } from "../../features/addressSlice";
 import { useLocation } from "react-router-dom";
 
-const AddressForm = ({ setShowForm}) => {
+const AddressForm = ({ setShowForm ,existingAddress}) => {
   const dispatch = useDispatch();
   const location = useLocation();
-  const existingAddress = location.state;
+  // const existingAddress = location.state;
 
+  console.log(existingAddress)
   const [formData, setFormData] = useState(
     existingAddress || {
       contact: { name: "", phoneNumber: "" },
@@ -18,11 +19,25 @@ const AddressForm = ({ setShowForm}) => {
   const [successMessage, setSuccessMessage] = useState("");
   const [error,setError]=useState("")
 
-  // useEffect(() => {
-  //   if (existingAddress) {
-  //     setFormData(existingAddress);
-  //   }
-  // }, [existingAddress]);
+  useEffect(() => {
+    // Set formData only if existingAddress is defined and has the expected structure
+    if (existingAddress) {
+      console.log(existingAddress)
+      setFormData({
+        contact: {
+          name: existingAddress.contact?.name || "",
+          phoneNumber: existingAddress.contact?.phoneNumber || "",
+        },
+        address: {
+          pinCode: existingAddress.address?.pinCode || "",
+          street: existingAddress.address?.street || "",
+          locality: existingAddress.address?.locality || "",
+          city: existingAddress.address?.city || "",
+          state: existingAddress.address?.state || "",
+        },
+      });
+    }
+  }, [existingAddress]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -46,7 +61,9 @@ const AddressForm = ({ setShowForm}) => {
       !formData.address.pinCode ||
       !formData.address.locality ||
       !formData.address.street ||
-      !formData.address.state 
+      !formData.address.state ||
+      !formData.address.city 
+
     ){
     setError("All field are required.")
     return
@@ -54,20 +71,26 @@ const AddressForm = ({ setShowForm}) => {
     setError("")
 
     const addressData=({
-      name:formData.contact.name,
-      phoneNumber:formData.contact.phoneNumber,
-      pinCode:formData.address.pinCode,
-      locality:formData.address.locality,
-      street:formData.address.street,
-      state:formData.address.state
-    })
+      contact:{
+        name:formData.contact.name,
+        phoneNumber:formData.contact.phoneNumber,
+    },
+      address:{
+        pinCode:formData.address.pinCode,
+        locality:formData.address.locality,
+        street:formData.address.street,
+        state:formData.address.state,
+        city:formData.address.city
+      }
+  })
 
     if (existingAddress) {
       dispatch(updateAddress({ _id: existingAddress._id, dataToUpdate: addressData }));
       setSuccessMessage("Address Updated Successfully");
+      dispatch(fetchAllAddress())
     } else {
       dispatch(addAddress(addressData)).then( ()=>{
-        //re-fetch addresses after adding a new one
+        //re-fetch addresses after adding a new one 
         dispatch(fetchAllAddress())
       });
 

@@ -8,22 +8,30 @@ import { fetchAllAddress } from '../../features/addressSlice';
 import AddressForm from '../AddressForm/AddressForm';
 import { FaPlus } from "react-icons/fa6";
 import { MdDelete } from "react-icons/md";
+import { filterByBrand } from '../../features/productSlice';
+import { useParams } from 'react-router-dom';
 
 
 const Profile = () => {
 
     const [showForm, setShowForm] = useState(false);
+    const {brand}=useParams()
     const dispatch = useDispatch();
+    const {filteredProducts}=useSelector((state)=>state.products)
     const {addresses,error, status}=useSelector((state)=>state.address)
-    console.log(addresses)
+    // console.log(addresses)
 
     useEffect(() => {
+      if(brand){
+        dispatch(filterByBrand(brand))
+      }
         dispatch(fetchAllAddress()); // Fetch addresses on component mount
-      }, [dispatch]);
+      }, [dispatch,brand]);
 
     const addHandler=()=>{
          setShowForm(true);
-         dispatch(addAddress())
+        //  dispatch(addAddress())
+        dispatch(fetchAllAddress())
          
     }
 

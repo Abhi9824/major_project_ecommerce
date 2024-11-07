@@ -1,11 +1,12 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
-export const addAddress=createAsyncThunk("addresses/addAddress",async(addAddress)=>{
+export const addAddress=createAsyncThunk("addAddress/addresses",async(addressData)=>{
     try {
-        const response=await axios.post('http://localhost:3000/addresses', addAddress)
+        const response=await axios.post('http://localhost:3000/addresses', addressData)
         if(response.status===201){
-            console.log("New Address:", response.data)
+            
+            console.log("address",response.data)
             return response.data
         }
     } catch (error) {
@@ -13,7 +14,7 @@ export const addAddress=createAsyncThunk("addresses/addAddress",async(addAddress
     }
 })
 
-export const updateAddress=createAsyncThunk("addresses/updateAddress", async({_id, dataToUpdate})=>{
+export const updateAddress=createAsyncThunk("updateAddress/addresses", async({_id, dataToUpdate})=>{
     try {
         const response=await axios.put(`http://localhost:3000/addresses/${_id}`, dataToUpdate)
         if(response.status===200){
@@ -25,7 +26,7 @@ export const updateAddress=createAsyncThunk("addresses/updateAddress", async({_i
         throw error
     }
 })
-export const deleteAddress=createAsyncThunk("addresses/deleteAddress", async(addressId)=>{
+export const deleteAddress=createAsyncThunk("deleteAddress/addresses", async(addressId)=>{
     try {
         console.log(addressId)
         const response=await axios.delete(`http://localhost:3000/addresses/${addressId}`)
@@ -80,8 +81,10 @@ state.addresses=action.payload
         state.status="success"
         const existingAddress=state.addresses.find((address)=>address._id===action.payload._id)
         if(!existingAddress){
-        state.addresses.push(action.payload)
+        state.addresses.push(action.payload.address)
         console.log("new address action",action.payload)
+        }else{
+            console.error("Already address added.")
         }
 
         }).addCase(addAddress.rejected, (state,action)=>{
@@ -110,7 +113,7 @@ state.status="success"
 const existingAddress=state.addresses.find((address)=>address._id===action.payload._id)
 if(existingAddress){
 state.addresses=action.payload
-console.log(action.payload)
+
 }
 
 console.log(existingAddress)

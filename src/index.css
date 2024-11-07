@@ -7,8 +7,14 @@
   :root{
     padding: 0;
   
-  --secondary-color: rgb(174, 40, 40);
-  --primary-color: rgb(14, 115, 86);
+  
+    --primary-color: rgb(18, 77, 70);
+    --secondary-color: rgb(255, 255, 255);
+
+    font-family: "Montserrat", sans-serif;
+    margin: 0;
+    padding: 0;
+
     
   }
   
@@ -18,3 +24,5 @@
     font-family: "Roboto",sans-serif,"Montserrat";
 
   }
+
+  

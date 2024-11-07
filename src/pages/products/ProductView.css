@@ -10,14 +10,6 @@
 
 
 
-.topDiv{
-    position: relative;
-    top:90px;
-    padding:0rem 1rem
-}
-
-
-
 
 .product-card {
     /* border: 1px solid #ddd; */
@@ -37,17 +29,8 @@
     transform: scale(1.05);
   }
   
-  .product-image {
-    width: 100%;
-    height: 230px;
-    transition: opacity 0.3s ease-in-out;
-    object-fit: cover;
-  }
   
-  .card-body {
-    padding: 15px;
-  }
-  
+
   .card-title {
     font-size: 1.1rem;
     margin-bottom: 0.5rem;
@@ -70,6 +53,9 @@
 }
 .mainDiv{
   padding: 0;
+  margin-bottom: 0;
+  position: relative;
+  top: 70px;
 }
 /* .rowPosition{
   position: relative;
@@ -87,4 +73,9 @@
 
   .linkDecoration{
     text-decoration: none;
+  }
+
+  .footer{
+    background-color: var(--primary-color);
+    color: white;
   }
